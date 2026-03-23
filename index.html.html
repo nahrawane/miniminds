@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MiniMinds</title>
+  <link href="https://fonts.cdnfonts.com/css/more-sugar" rel="stylesheet"/>
+  <style>
+    /* ===== RESET & VARIABLES ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --pink: #dd72a6;
+      --teal: #45b4b1;
+      --cream: #f8f7f2;
+      --dark: #443b28;
+      --light-teal: #e0f7fa;
+      --font: 'More Sugar', cursive, sans-serif;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--cream);
+      color: var(--dark);
+      min-height: 100vh;
+    }
+
+    /* ===== PAGES ===== */
+    .page { display: none; min-height: 100vh; flex-direction: column; align-items: center; padding: 30px 20px; }
+    .page.active { display: flex; }
+
+    /* ===== LOGO ===== */
+    .logo-img { width: 180px; margin-bottom: 10px; }
+
+    /* ===== NAV BACK BUTTON ===== */
+    .back-btn {
+      align-self: flex-start;
+      background: var(--teal);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      padding: 8px 22px;
+      font-family: var(--font);
+      font-size: 18px;
+      cursor: pointer;
+      margin-bottom: 10px;
+      transition: background 0.2s;
+    }
+    .back-btn:hover { background: var(--pink); }
+
+    /* ===== HEADINGS ===== */
+    h1 { color: var(--pink); font-size: clamp(28px, 5vw, 52px); text-align: center; margin: 10px 0 20px; }
+    h2 { color: var(--teal); font-size: clamp(22px, 4vw, 38px); text-align: center; margin: 10px 0; }
+    h3 { color: var(--teal); font-size: clamp(16px, 2.5vw, 24px); text-align: center; margin: 8px 0; }
+
+    /* ===== PAGE 1: SIGNUP ===== */
+    #page-signup .card {
+      background: white;
+      border-radius: 24px;
+      padding: 36px 40px;
+      box-shadow: 0 8px 32px rgba(68,59,40,0.10);
+      max-width: 460px;
+      width: 100%;
+      margin-top: 10px;
+    }
+    #page-signup label {
+      display: block;
+      color: var(--teal);
+      font-size: 20px;
+      margin: 14px 0 4px;
+    }
+    #page-signup input, #page-signup select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 2px solid var(--teal);
+      border-radius: 12px;
+      font-family: var(--font);
+      font-size: 18px;
+      background: var(--cream);
+      color: var(--dark);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    #page-signup input:focus, #page-signup select:focus { border-color: var(--pink); }
+    .gender-group { display: flex; gap: 16px; margin: 8px 0 4px; flex-wrap: wrap; }
+    .gender-group label { display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--dark); font-size: 18px; margin: 0; }
+    .btn-row { display: flex; gap: 14px; justify-content: center; margin-top: 22px; }
+    .btn-primary {
+      background: var(--pink);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      padding: 12px 36px;
+      font-family: var(--font);
+      font-size: 22px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-primary:hover { background: var(--teal); transform: scale(1.04); }
+    .btn-secondary {
+      background: white;
+      color: var(--teal);
+      border: 2px solid var(--teal);
+      border-radius: 30px;
+      padding: 12px 36px;
+      font-family: var(--font);
+      font-size: 22px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover { background: var(--teal); color: white; }
+
+    /* ===== PAGE 2: WELCOME ===== */
+    #page-welcome .welcome-msg {
+      background: white;
+      border-radius: 24px;
+      padding: 32px 36px;
+      max-width: 640px;
+      width: 100%;
+      box-shadow: 0 8px 32px rgba(68,59,40,0.10);
+      color: var(--pink);
+      font-size: clamp(16px, 2.2vw, 22px);
+      line-height: 1.7;
+      margin: 16px 0 28px;
+      text-align: center;
+    }
+
+    /* ===== PAGE 3: SUBJECTS ===== */
+    #page-subjects .subjects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 28px;
+      max-width: 900px;
+      width: 100%;
+      margin-top: 20px;
+    }
+    .subject-card {
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 6px 24px rgba(68,59,40,0.10);
+      padding: 36px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: 3px solid transparent;
+    }
+    .subject-card:hover { transform: translateY(-8px) scale(1.03); box-shadow: 0 16px 40px rgba(68,59,40,0.16); border-color: var(--pink); }
+    .subject-card .icon { font-size: 56px; margin-bottom: 12px; }
+    .subject-card h2 { font-size: 32px; }
+
+    /* ===== PAGE: ENGLISH ===== */
+    .alphabet-table { border-collapse: collapse; margin: 20px auto; max-width: 600px; width: 100%; }
+    .alphabet-table th {
+      background: var(--pink);
+      color: white;
+      padding: 12px 20px;
+      font-size: 20px;
+    }
+    .alphabet-table td {
+      padding: 10px 20px;
+      text-align: center;
+      font-size: 22px;
+      color: var(--teal);
+      border-bottom: 1px solid #eee;
+    }
+    .alphabet-table tr:nth-child(even) td { background: #f0fdfc; }
+    .resources { margin-top: 24px; width: 100%; max-width: 500px; }
+    .resources h3 { margin-bottom: 10px; }
+    .resources ul { list-style: none; padding: 0; }
+    .resources li { margin: 8px 0; }
+    .resources a {
+      color: var(--pink);
+      text-decoration: none;
+      font-size: 20px;
+      background: white;
+      border-radius: 30px;
+      padding: 8px 22px;
+      display: inline-block;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      transition: background 0.2s, color 0.2s;
+    }
+    .resources a:hover { background: var(--pink); color: white; }
+
+    /* ===== PAGE: FRENCH ===== */
+
+    /* ===== PAGE: ARABIC ===== */
+    .alphabet-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      max-width: 700px;
+      margin: 20px auto;
+      gap: 8px;
+    }
+    .letter-card {
+      background: var(--pink);
+      color: white;
+      border: 2px solid var(--dark);
+      width: 76px;
+      height: 76px;
+      font-size: 2.4em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 14px;
+      transition: transform 0.2s, background 0.2s;
+      font-family: var(--font);
+    }
+    .letter-card:hover { transform: scale(1.13); background: var(--teal); }
+    .example-container {
+      background: var(--light-teal);
+      border: 2px solid var(--teal);
+      margin: 20px auto;
+      padding: 20px 30px;
+      max-width: 420px;
+      width: 100%;
+      border-radius: 14px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+    .example-container h2 { color: var(--teal); font-size: 24px; margin-bottom: 10px; }
+    #example-letter { font-size: 2.5em; color: var(--dark); }
+    #example-english, #example-arabic, #example-pronunciation { font-size: 1.3em; color: var(--dark); }
+
+    /* ===== PAGE: MATH ===== */
+    .numbers-list {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 24px;
+      padding: 0;
+    }
+    .numbers-list li {
+      background: white;
+      color: var(--teal);
+      font-size: 40px;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(68,59,40,0.10);
+      border: 3px solid var(--pink);
+      transition: transform 0.2s;
+      cursor: default;
+    }
+    .numbers-list li:hover { transform: scale(1.15); background: var(--light-teal); }
+
+    /* ===== DIVIDER ===== */
+    .divider { width: 80%; max-width: 600px; border: none; border-top: 2px dashed var(--teal); margin: 18px 0; opacity: 0.4; }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+    .page.active { animation: fadeIn 0.45s ease; }
+  </style>
+</head>
+<body>
+
+<!-- ===================== PAGE 1: SIGNUP ===================== -->
+<div id="page-signup" class="page active">
+  <img class="logo-img" src="https://raw.githubusercontent.com/placeholder/placeholder/main/logo.png"
+    onerror="this.style.display='none'" alt="MiniMinds Logo"/>
+  <!-- Inline logo as SVG fallback with the brand name -->
+  <div style="font-family:var(--font);font-size:48px;margin-bottom:4px;">
+    <span style="color:var(--pink)">Mini</span><span style="color:var(--teal)">Minds</span>
+  </div>
+  <h1>Welcome to our Website!</h1>
+  <div class="card">
+    <label for="username">Username:</label>
+    <input type="text" id="username" placeholder="Your name" required/>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" placeholder="your@email.com" required/>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" placeholder="••••••••" required/>
+
+    <label for="repassword">Re-enter Password:</label>
+    <input type="password" id="repassword" placeholder="••••••••" required/>
+
+    <label for="birthdate">Your Date of Birth:</label>
+    <input type="date" id="birthdate" required/>
+
+    <label>Gender:</label>
+    <div class="gender-group">
+      <label><input type="radio" name="gender" value="female"/> Female</label>
+      <label><input type="radio" name="gender" value="male"/> Male</label>
+      <label><input type="radio" name="gender" value="other"/> Prefer not to say</label>
+    </div>
+
+    <label for="country">Select Your Country:</label>
+    <select id="country">
+      <option value="morocco">Morocco</option>
+      <option value="egypt">Egypt</option>
+      <option value="algeria">Algeria</option>
+      <option value="tunisia">Tunisia</option>
+      <option value="nigeria">Nigeria</option>
+      <option value="south_africa">South Africa</option>
+    </select>
+
+    <div class="btn-row">
+      <button class="btn-primary" onclick="goTo('page-welcome')">Submit</button>
+      <button class="btn-secondary" onclick="document.querySelectorAll('input').forEach(i=>i.value='')">Reset</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE 2: WELCOME ===================== -->
+<div id="page-welcome" class="page">
+  <div style="font-family:var(--font);font-size:48px;margin-bottom:4px;">
+    <span style="color:var(--pink)">Mini</span><span style="color:var(--teal)">Minds</span>
+  </div>
+  <h1>Welcome onboard Kids! 🎉</h1>
+  <div class="welcome-msg">
+    Dear students,<br><br>
+    In today's tech-savvy world, using digital resources can really boost your learning!
+    Check out our website to find cool lessons and fun educational content that will help you
+    understand your school subjects better. Every time you visit, you're taking a step closer
+    to reaching your goals and achieving success. Dive in and enjoy learning — you're on your
+    way to a bright future!
+  </div>
+  <button class="btn-primary" onclick="goTo('page-subjects')">Next Page ➜</button>
+</div>
+
+<!-- ===================== PAGE 3: SUBJECTS ===================== -->
+<div id="page-subjects" class="page">
+  <div style="font-family:var(--font);font-size:48px;margin-bottom:4px;">
+    <span style="color:var(--pink)">Mini</span><span style="color:var(--teal)">Minds</span>
+  </div>
+  <h1>Welcome to MINIMINDS, little friend!</h1>
+  <h3>Let's learn and have fun together with all the cool things we've got here!</h3>
+  <div class="subjects-grid">
+    <div class="subject-card" onclick="goTo('page-english')">
+      <div class="icon">🇬🇧</div>
+      <h2>English</h2>
+      <p style="color:#aaa;font-size:16px;margin-top:6px;">Click to explore</p>
+    </div>
+    <div class="subject-card" onclick="goTo('page-french')">
+      <div class="icon">🇫🇷</div>
+      <h2>French</h2>
+      <p style="color:#aaa;font-size:16px;margin-top:6px;">Click to explore</p>
+    </div>
+    <div class="subject-card" onclick="goTo('page-arabic')">
+      <div class="icon">🌙</div>
+      <h2>Arabic</h2>
+      <p style="color:#aaa;font-size:16px;margin-top:6px;">Click to explore</p>
+    </div>
+    <div class="subject-card" onclick="goTo('page-math')">
+      <div class="icon">🔢</div>
+      <h2>Math</h2>
+      <p style="color:#aaa;font-size:16px;margin-top:6px;">Click to explore</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE: ENGLISH ===================== -->
+<div id="page-english" class="page">
+  <button class="back-btn" onclick="goTo('page-subjects')">← Back</button>
+  <div style="font-family:var(--font);font-size:40px;margin-bottom:4px;">
+    <span style="color:var(--pink)">Mini</span><span style="color:var(--teal)">Minds</span>
+  </div>
+  <h1>Welcome to The English Page</h1>
+  <h3><i>Let's learn the alphabet!</i></h3>
+  <h3><i>English — one of the easiest and funniest languages 😊</i></h3>
+  <hr class="divider"/>
+  <table class="alphabet-table">
+    <tr>
+      <th>Letter</th><th>Match</th><th>Example</th><th></th>
+    </tr>
+    <tr><td>A</td><td>a</td><td>Apple</td><td>🍎</td></tr>
+    <tr><td>B</td><td>b</td><td>Butterfly</td><td>🦋</td></tr>
+    <tr><td>C</td><td>c</td><td>Cat</td><td>🐈</td></tr>
+    <tr><td>D</td><td>d</td><td>Dog</td><td>🐶</td></tr>
+    <tr><td>E</td><td>e</td><td>Elephant</td><td>🐘</td></tr>
+    <tr><td>F</td><td>f</td><td>Fish</td><td>🐟</td></tr>
+    <tr><td>G</td><td>g</td><td>Giraffe</td><td>🦒</td></tr>
+    <tr><td>H</td><td>h</td><td>Horse</td><td>🐴</td></tr>
+    <tr><td>I</td><td>i</td><td>Ice cream</td><td>🍦</td></tr>
+    <tr><td>J</td><td>j</td><td>Jellyfish</td><td>🪼</td></tr>
+    <tr><td>K</td><td>k</td><td>Kite</td><td>🪁</td></tr>
+    <tr><td>L</td><td>l</td><td>Lion</td><td>🦁</td></tr>
+    <tr><td>M</td><td>m</td><td>Moon</td><td>🌙</td></tr>
+    <tr><td>N</td><td>n</td><td>Nest</td><td>🪺</td></tr>
+    <tr><td>O</td><td>o</td><td>Orange</td><td>🍊</td></tr>
+    <tr><td>P</td><td>p</td><td>Penguin</td><td>🐧</td></tr>
+    <tr><td>Q</td><td>q</td><td>Queen</td><td>👑</td></tr>
+    <tr><td>R</td><td>r</td><td>Rainbow</td><td>🌈</td></tr>
+    <tr><td>S</td><td>s</td><td>Sun</td><td>☀️</td></tr>
+    <tr><td>T</td><td>t</td><td>Tiger</td><td>🐯</td></tr>
+    <tr><td>U</td><td>u</td><td>Umbrella</td><td>☂️</td></tr>
+    <tr><td>V</td><td>v</td><td>Violin</td><td>🎻</td></tr>
+    <tr><td>W</td><td>w</td><td>Whale</td><td>🐋</td></tr>
+    <tr><td>X</td><td>x</td><td>Xylophone</td><td>🎵</td></tr>
+    <tr><td>Y</td><td>y</td><td>Yak</td><td>🐂</td></tr>
+    <tr><td>Z</td><td>z</td><td>Zebra</td><td>🦓</td></tr>
+  </table>
+  <hr class="divider"/>
+  <div class="resources">
+    <h3><i>Learn English With MiniMinds Team! 📚</i></h3>
+    <ul>
+      <li><a href="https://www.jefcoed.com/site/handlers/filedownload.ashx?moduleinstanceid=8171&dataid=17091&FileName=free-alphabet-flashcards-letters%20Uppercase.pdf" target="_blank">Alphabet Cards</a></li>
+      <li><a href="https://youtu.be/by1QAoRcc-U?si=dVKktNE01JA63tPQ" target="_blank">Basic English Video</a></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===================== PAGE: FRENCH ===================== -->
+<div id="page-french" class="page">
+  <button class="back-btn" onclick="goTo('page-subjects')">← Back</button>
+  <div style="font-family:var(--font);font-size:40px;margin-bottom:4px;">
+    <span style="color:var(--pink)">Mini</span><span style="color:var(--teal)">Minds</span>
+  </div>
+  <h1>Bienvenue les enfants ! 🇫🇷</h1>
+  <h3><i>Apprenons le français ensemble → Let's learn French together!</i></h3>
+  <hr class="divider"/>
+  <table class="alphabet-table">
+    <tr>
+      <th>Lettre</th><th>Exemple</th><th></th>
+    </tr>
+    <tr><td>A, a</td><td>Arbre</td><td>🌲</td></tr>
+    <tr><td>B, b</td><td>Bonjour</td><td>👋</td></tr>
+    <tr><td>C, c</td><td>Chien</td><td>🐶</td></tr>
+    <tr><td>D, d</td><td>Dauphin</td><td>🐬</td></tr>
+    <tr><td>E, e</td><td>Étoile</td><td>⭐</td></tr>
+    <tr><td>F, f</td><td>Fleur</td><td>🌸</td></tr>
+    <tr><td>G, g</td><td>Girafe</td><td>🦒</td></tr>
+    <tr><td>H, h</td><td>Hibou</td><td>🦉</td></tr>
+    <tr><td>I, i</td><td>Île</td><td>🏝️</td></tr>
+    <tr><td>J, j</td><td>Jardin</td><td>🌿</td></tr>
+    <tr><td>K, k</td><td>Koala</td><td>🐨</td></tr>
+    <tr><td>L, l</td><td>Lapin</td><td>🐰</td></tr>
+    <tr><td>M, m</td><td>Maison</td><td>🏠</td></tr>
+    <tr><td>N, n</td><td>Nuage</td><td>☁️</td></tr>
+    <tr><td>O, o</td><td>Oiseau</td><td>🐦</td></tr>
+    <tr><td>P, p</td><td>Papillon</td><td>🦋</td></tr>
+    <tr><td>Q, q</td><td>Queue</td><td>🐱</td></tr>
+    <tr><td>R, r</td><td>Renard</td><td>🦊</td></tr>
+    <tr><td>S, s</td><td>Soleil</td><td>☀️</td></tr>
+    <tr><td>T, t</td><td>Tortue</td><td>🐢</td></tr>
+    <tr><td>U, u</td><td>Ours</td><td>🐻</td></tr>
+    <tr><td>V, v</td><td>Vache</td><td>🐄</td></tr>
+    <tr><td>W, w</td><td>Wagon</td><td>🚂</td></tr>
+    <tr><td>X, x</td><td>Xylophone</td><td>🎵</td></tr>
+    <tr><td>Y, y</td><td>Yeux</td><td>👀</td></tr>
+    <tr><td>Z, z</td><td>Zèbre</td><td>🦓</td></tr>
+  </table>
+  <hr class="divider"/>
+  <div class="resources">
+    <h3><i>Apprends le français avec MiniMinds! 🎬</i></h3>
+    <ul>
+      <li><a href="https://youtu.be/-7woR4auqso?si=bPsbKYGLaqhjDEG6" target="_blank">French Alphabet</a></li>
+      <li><a href="https://youtu.be/uyHIcOX4FaE?si=g75nUoftsEyVhphu" target="_blank">Numbers, Colors & More</a></li>
+      <li><a href="https://youtu.be/d7ms1n3sT78?si=sPZ_gke0hxLKr7RA" target="_blank">Useful Phrases</a></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===================== PAGE: ARABIC ===================== -->
+<div id="page-arabic" class="page">
+  <button class="back-btn" onclick="goTo('page-subjects')">← Back</button>
+  <div style="font-family:var(--font);font-size:40px;margin-bottom:4px;">
+    <span style="color:var(--pink)">Mini</span><span style="color:var(--teal)">Minds</span>
+  </div>
+  <h1>Learn Arabic Alphabet 🌙</h1>
+  <h3>Click on a letter to see an example!</h3>
+
+  <div class="alphabet-container">
+    <div class="letter-card" onclick="showArabic('أ','Apple','تفاحة','to-fa-ha')">أ</div>
+    <div class="letter-card" onclick="showArabic('ب','Boy','ولد','wa-lad')">ب</div>
+    <div class="letter-card" onclick="showArabic('ت','Tiger','نمر','na-mir')">ت</div>
+    <div class="letter-card" onclick="showArabic('ث','Fox','ثعلب','tha-la-b')">ث</div>
+    <div class="letter-card" onclick="showArabic('ج','Camel','جمل','ja-mal')">ج</div>
+    <div class="letter-card" onclick="showArabic('ح','Crown','تاج','ta-aj')">ح</div>
+    <div class="letter-card" onclick="showArabic('خ','Bread','خبز','khub-z')">خ</div>
+    <div class="letter-card" onclick="showArabic('د','Rooster','ديك','dee-k')">د</div>
+    <div class="letter-card" onclick="showArabic('ذ','Wolf','ذئب','thee-b')">ذ</div>
+    <div class="letter-card" onclick="showArabic('ر','Head','رأس','ra-as')">ر</div>
+    <div class="letter-card" onclick="showArabic('ز','Flower','زهرة','zah-ra')">ز</div>
+    <div class="letter-card" onclick="showArabic('س','Fish','سمكة','sa-ma-ka')">س</div>
+    <div class="letter-card" onclick="showArabic('ش','Sun','شمس','sha-mes')">ش</div>
+    <div class="letter-card" onclick="showArabic('ص','Falcon','صقر','sa-qr')">ص</div>
+    <div class="letter-card" onclick="showArabic('ض','Frog','ضفدع','dif-da')">ض</div>
+    <div class="letter-card" onclick="showArabic('ط','Drum','طبل','tab-l')">ط</div>
+    <div class="letter-card" onclick="showArabic('ظ','Umbrella','مظلة','miz-lah')">ظ</div>
+    <div class="letter-card" onclick="showArabic('ع','Eye','عين','ayn')">ع</div>
+    <div class="letter-card" onclick="showArabic('غ','Cloud','غيمة','ghay-ma')">غ</div>
+    <div class="letter-card" onclick="showArabic('ف','Elephant','فيل','feel')">ف</div>
+    <div class="letter-card" onclick="showArabic('ق','Moon','قمر','qa-mar')">ق</div>
+    <div class="letter-card" onclick="showArabic('ك','Book','كتاب','ki-tab')">ك</div>
+    <div class="letter-card" onclick="showArabic('ل','Lemon','ليمون','lee-moon')">ل</div>
+    <div class="letter-card" onclick="showArabic('م','House','منزل','man-zil')">م</div>
+    <div class="letter-card" onclick="showArabic('ن','Bee','نحلة','na-hla')">ن</div>
+    <div class="letter-card" onclick="showArabic('ه','Flower','زهرة','zah-ra')">ه</div>
+    <div class="letter-card" onclick="showArabic('و','Rose','وردة','war-da')">و</div>
+    <div class="letter-card" onclick="showArabic('ي','Hand','يد','yad')">ي</div>
+  </div>
+
+  <div id="example-container" class="example-container" style="display:none;">
+    <h2>Letter: <span id="example-letter" style="font-size:2em;color:var(--dark)"></span></h2>
+    <p>English: <span id="example-english"></span></p>
+    <p>Arabic: <span id="example-arabic"></span></p>
+    <p>Pronunciation: <span id="example-pronunciation"></span></p>
+  </div>
+</div>
+
+<!-- ===================== PAGE: MATH ===================== -->
+<div id="page-math" class="page">
+  <button class="back-btn" onclick="goTo('page-subjects')">← Back</button>
+  <div style="font-family:var(--font);font-size:40px;margin-bottom:4px;">
+    <span style="color:var(--pink)">Mini</span><span style="color:var(--teal)">Minds</span>
+  </div>
+  <h1>Welcome to Maths Page 🔢</h1>
+  <h2>Let's learn numbers from 1 to 10!</h2>
+  <ul class="numbers-list">
+    <li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+    <li>6</li><li>7</li><li>8</li><li>9</li><li>10</li>
+  </ul>
+</div>
+
+<!-- ===================== SCRIPT ===================== -->
+<script>
+  function goTo(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function showArabic(letter, eng, ar, pron) {
+    document.getElementById('example-letter').textContent = letter;
+    document.getElementById('example-english').textContent = eng;
+    document.getElementById('example-arabic').textContent = ar;
+    document.getElementById('example-pronunciation').textContent = pron;
+    document.getElementById('example-container').style.display = 'block';
+  }
+</script>
+</body>
+</html>
